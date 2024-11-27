@@ -1,6 +1,5 @@
 #include "transmision.h"
 #include <Arduino.h>
-#include "main.cpp"
 
 char buffer[50];
 int bufferIndex = 0;

@@ -3,12 +3,14 @@
 #ifndef TRANSMISION_H
 #define TRANSMISION_H
 
-extern char buffer[50];
+#include <modifiers.h>
 
-extern const int puLength;
-extern const int laLength;
-extern const int heLength;
-extern const int veLength;
+extern bool pumpReceived;
+extern bool lampReceived;
+extern bool heatingReceived;
+extern bool ventilationReceived;
+extern int timeReceived;
+
 
 void receive();
 

@@ -39,9 +39,9 @@ void checkWaterReachedLevel() {
     }
 }
 
-void modifyPumpState() { // command sent from C# to enable pump and close gateway
-    digitalWrite(PIN_GATEWAY, HIGH);
-    digitalWrite(PIN_PUMP, HIGH);
-    pumpRunning = true;
-    pumpReceived = false;
+void modifyPumpState(bool pumpReceived) { // command sent from C# to enable pump and close gateway
+    digitalWrite(PIN_GATEWAY, pumpReceived);
+    digitalWrite(PIN_PUMP, pumpReceived);
+    pumpRunning = pumpReceived;
+    // pumpReceived = false;
 }

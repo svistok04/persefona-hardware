@@ -4,10 +4,6 @@
 #include <transmision.h>
 #include <modifiers.h>
 
-
-
-
-
 void setup() {
     // put your setup code here, to run once:
     pinMode(PIN_LEVEL_WATER, INPUT_PULLUP);

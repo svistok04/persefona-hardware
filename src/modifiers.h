@@ -22,6 +22,6 @@ void modifyGateway();
 
 void checkWaterReachedLevel();
 
-void modifyPumpState();
+void modifyPumpState(bool pumpReceived);
 
 #endif

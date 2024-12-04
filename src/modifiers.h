@@ -3,10 +3,10 @@
 
 #define PIN_PUMP 3
 #define PIN_LEVEL_WATER 4
-#define PIN_GATEWAY 4
-#define PIN_LAMP 5
-#define PIN_HEATING 6
-#define PIN_VENTILATION 7
+#define PIN_GATEWAY 5
+#define PIN_LAMP 6
+#define PIN_HEATING 7
+#define PIN_VENTILATION 8
 
 extern bool pumpRunning;
 extern bool gatewayCountdownStarted;
@@ -22,6 +22,6 @@ void modifyGateway();
 
 void checkWaterReachedLevel();
 
-void modifyPumpState();
+void modifyPumpState(bool pumpReceived);
 
 #endif

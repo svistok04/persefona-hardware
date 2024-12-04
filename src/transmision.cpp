@@ -48,7 +48,7 @@ void parseMessage(const char* msg) { // add parsing data read
         if (strncmp(msg + pos, "pu", 2) == 0) {
             pos += 2; // move position by 2 (pu)
             pumpReceived = msg[pos++] == '1';
-            if (pumpReceived) modifyPumpState();
+            modifyPumpState(pumpReceived);
             Serial.print("Pump received ");
         } else if (strncmp(msg + pos, "la", 2) == 0) {
             pos += 2; // move position by 2 (la)

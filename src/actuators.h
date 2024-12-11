@@ -18,7 +18,11 @@ void modifyHeating(bool state);
 
 void modifyVentilation(bool state);
 
-void modifyGateway();
+void openGateway();
+
+void closeGateway();
+
+void countdownGateway();
 
 void checkWaterReachedLevel();
 

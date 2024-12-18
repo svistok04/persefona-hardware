@@ -1,0 +1,6 @@
+Pompa - 3
+Poziom wody - 4
+Brama - 5
+Lampa - 6
+Ogrzewanie - 7
+Wentylacja - 8

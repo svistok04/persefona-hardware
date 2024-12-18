@@ -1,0 +1,27 @@
+prefiks: *
+sufiks: \
+brak danych: ~
+
+Oznaczenia:
+gh - wilgotność ziemi (ground humidity)
+ah - wilgotność powietrza (air humidity)
+li - naświetlenie (light)
+ph - ph
+qu - jakość wody (quality)
+it - temperatura w środku (inside temperature)
+ot - temperatura na zewnątrz (outside temperature)
+pu - pompa wody (pump)
+la - oświetlenie (lamp)
+he - nagrzewanie (heating)
+ve - wentylacja (ventilation)
+ti - czas trzymania wody
+
+
+Przykłady:
+
+Software:
+	*pu#la#he#ve#\
+Hardware:
+	*gh######ah######li######ph######qu######it######ot######pu#la#he#ve#\
+
+# - cyfra 0-9

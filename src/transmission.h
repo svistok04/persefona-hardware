@@ -3,7 +3,7 @@
 #ifndef TRANSMISION_H
 #define TRANSMISION_H
 
-#include <modifiers.h>
+#include <actuators.h>
 
 extern bool pumpReceived;
 extern bool lampReceived;

@@ -10,8 +10,12 @@ void modifyLampState(bool state) {
     digitalWrite(PIN_LAMP, state);
 }
 
-void modifyHeating(bool state) {
-    digitalWrite(PIN_HEATING, state);
+void modifyHeating() {
+    static int lastHeatingCheck = 0;
+    if (millis() - lastHeatingCheck > 300000) {
+        lastHeatingCheck = millis();
+        if (sensorTemperature - )
+    }
 }
 
 void modifyVentilation(bool state) {

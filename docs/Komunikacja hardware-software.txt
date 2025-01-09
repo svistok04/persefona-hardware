@@ -3,19 +3,22 @@ sufiks: \
 brak danych: ~
 
 Oznaczenia:
-gh - wilgotność ziemi (ground humidity)
-ah - wilgotność powietrza (air humidity)
-li - naświetlenie (light)
-ph - ph
-qu - jakość wody (quality)
-it - temperatura w środku (inside temperature)
-ot - temperatura na zewnątrz (outside temperature)
-pu - pompa wody (pump)
-la - oświetlenie (lamp)
-he - nagrzewanie (heating)
-ve - wentylacja (ventilation)
-ti - czas trzymania wody
+gh - wilgotność ziemi (ground humidity) (h)
+ah - wilgotność powietrza (air humidity) (h)
+li - naświetlencie (light) (h)
+ph - ph (h)
+qu - jakość wody (quality) (h)
+it - temperatura w środku (inside temperature) (h/s)
+ot - temperatura na zewnątrz (outside temperature) (h)
+pu - pompa wody (pump) (s)
+ti - czas trzymania wody (h/s)
+(wysyłane 6 cyfr, po środku jest kropka)
 
+la - oświetlenie (lamp) (s)
+he - nagrzewanie (heating) (s)
+ve - wentylacja (ventilation) (s) 
+
+(wysyłana 1 cyfra, prawda/fałsz)
 
 Przykłady:
 
@@ -25,3 +28,18 @@ Hardware:
 	*gh######ah######li######ph######qu######it######ot######pu#la#he#ve#\
 
 # - cyfra 0-9
+
+Sposób komunikacji:
+
+Ogrzewanie:
+Aplikacja: wysyła tylko temperaturę
+Urządzenie: zarządza ogrzewaniem
+
+Pompa:
+Wersja 1:
+Aplikacja: Wysyła komunikat włączenia wody i czas trzymania
+Urządzenie: Włącza pompę i napełnia do pewnego momentu. Trzyma wodę przez czas określony przez aplikację. Urządzenie może wysłać informacje ile czasu zostało trzymania wody
+
+Wersja 2:
+Aplikacja: Wysyła komunikat włączenia wody
+Urządzenie: Włącza pompę, która będzie włączona przez x sekund.

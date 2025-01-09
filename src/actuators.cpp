@@ -1,20 +1,26 @@
 #include <actuators.h>
 #include <Arduino.h>
+#include <sensors.h>
 #include <transmission.h>
 
 bool pumpRunning;
 bool gatewayCountdownStarted;
 unsigned long gatewayCountdownStartTime;
+float temperatureRange = 2.0; // acceptable temperature disparity
 
 void modifyLampState(bool state) {
     digitalWrite(PIN_LAMP, state);
 }
 
 void modifyHeating() {
-    static int lastHeatingCheck = 0;
-    if (millis() - lastHeatingCheck > 300000) {
+    static unsigned int lastHeatingCheck = 0;
+    if (millis() - lastHeatingCheck > 60000) { // check every 1m
         lastHeatingCheck = millis();
-        if (sensorTemperature - )
+        if (sensorTemperatureDS18B20 - desiredTemperature > -temperatureRange) {
+            digitalWrite(PIN_HEATING, HIGH);
+        } else if (sensorTemperatureDS18B20 - desiredTemperature > temperatureRange) {
+            digitalWrite(PIN_HEATING, LOW);
+        }
     }
 }
 
@@ -22,6 +28,7 @@ void modifyVentilation(bool state) {
     digitalWrite(PIN_VENTILATION, state);
 }
 
+/// 
 void countdownGateway() { // time [s] start counting time right after pump stopping to open gateway
     if (gatewayCountdownStarted) {
         if (millis() - gatewayCountdownStartTime > timeReceived) {
@@ -36,6 +43,9 @@ void openGateway() {
     digitalWrite(PIN_GATEWAY, HIGH);
     // eventually if (gatewayCompletelyOpen) or after some time, then stop opening
     // gatewayCountdownStarted = false;
+    // if (checkGatewayOpen()) {
+    //     digitalWrite(PIN_GATEWAY, LOW);
+    // }
 }
 
 void closeGateway() {

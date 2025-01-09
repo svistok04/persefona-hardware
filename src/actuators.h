@@ -1,5 +1,5 @@
-#ifndef MODIFIERS_H
-#define MODIFIERS_H
+#ifndef ACTUATORS_H
+#define ACTUATORS_H
 
 #define PIN_PUMP 3
 #define PIN_LEVEL_WATER 4
@@ -28,4 +28,4 @@ void checkWaterReachedLevel();
 
 void modifyPumpState(bool pumpReceived);
 
-#endif
+#endif // ACTUATORS_H

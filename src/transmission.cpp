@@ -12,6 +12,7 @@ bool ventilationReceived;
 int timeReceived;
 
 
+/// start reading after receiving *, read full message, stop at \ and append it back
 void receive() {
     while (Serial.available() > 0) {
         char incomingChar = Serial.read();
@@ -24,7 +25,9 @@ void receive() {
         }
 
         if (receiving) {
-            if (incomingChar == '\\') {
+            if (bufferIndex < sizeof(buffer) - 1) {
+                buffer[bufferIndex++] = incomingChar;
+            } else if (incomingChar == '\\') {
                 //Serial.print("\\ received");
                 String dane = "";
                 for (int i = 0; i < bufferIndex; i++) {
@@ -32,39 +35,39 @@ void receive() {
                 }
                 // Serial.print(dane);
                 receiving = false;
-                buffer[bufferIndex++] = '\0';
+                buffer[bufferIndex++] = '\0'; // append \ back
                 parseMessage(buffer);
-            } else if (bufferIndex < sizeof(buffer) - 1) {
-                buffer[bufferIndex++] = incomingChar;
             }
         }
     }
 }
 
-void parseMessage(const char* msg) { // add parsing data read
-    int pos = 1;  // Position tracker in the message
+
+/// parse until \ is reached
+void parseMessage(const char* msg) {
+    int pos = 1;  // position tracker in the message
     while (msg[pos] != '\\') {
         Serial.print("c");
         if (strncmp(msg + pos, "pu", 2) == 0) {
             pos += 2; // move position by 2 (pu)
             pumpReceived = msg[pos++] == '1';
             modifyPumpState(pumpReceived);
-            Serial.print("Pump received ");
+            // Serial.print("Pump received ");
         } else if (strncmp(msg + pos, "la", 2) == 0) {
             pos += 2; // move position by 2 (la)
             lampReceived = msg[pos++] == '1';
             modifyLampState(lampReceived);
-            Serial.print("Lamp received ");
+            // Serial.print("Lamp received ");
         } else if (strncmp(msg + pos, "he", 2) == 0) {
             pos += 2; // move position by 2 (he)
             heatingReceived = msg[pos++] == '1';
             modifyHeating(heatingReceived);
-            Serial.print("Heating received ");
+            // Serial.print("Heating received ");
         } else if (strncmp(msg + pos, "ve", 2) == 0) {
             pos += 2; // move position by 2 (ve)
             ventilationReceived = msg[pos++] == '1';
             modifyVentilation(ventilationReceived);
-            Serial.print("Ventilation received ");
+            // Serial.print("Ventilation received ");
         } else if (strncmp(msg + pos, "ti", 2) == 0) {
             pos += 2;
             timeReceived = 0;
@@ -75,5 +78,5 @@ void parseMessage(const char* msg) { // add parsing data read
             break;
         }
     }
-    Serial.print(" end parsing");
+    // Serial.print(" end parsing");
 }

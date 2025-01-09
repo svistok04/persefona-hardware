@@ -1,14 +1,13 @@
-// Created by zongc on 13.11.2024.
-
 #ifndef TRANSMISION_H
 #define TRANSMISION_H
 
-#include <modifiers.h>
+#include <actuators.h>
 
 extern bool pumpReceived;
 extern bool lampReceived;
 extern bool heatingReceived;
 extern bool ventilationReceived;
+extern float desiredTemperature;
 extern int timeReceived;
 
 

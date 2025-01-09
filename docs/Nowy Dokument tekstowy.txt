@@ -1,0 +1,109 @@
+#include <DHT.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
+#define DHT_PIN 7
+#define DHTTYPE DHT11
+#define TEMPERATURE_PIN 6 // DS18B20
+#define HUMIDITY_PIN A3 // FC-28
+#define PH_PIN A2 // must be analog A0 // SEN0161
+#define TURBIDIY_PIN A1 // SEN0189
+
+DHT dht(DHT_PIN, DHTTYPE);
+OneWire oneWire(TEMPERATURE_PIN);
+DallasTemperature temperatureSensor(&oneWire);
+
+void setup() {
+    Serial.begin(9600);
+    dht.begin();
+    temperatureSensor.begin();
+    temperatureSensor.getDeviceCount();
+    Serial.println(temperatureSensor.getDeviceCount());
+}
+
+void
+
+double stableReading(int pin, int sampleCount, int sampleDelay);
+
+void loop() {
+    float humidity = dht.readHumidity();
+    float temperature = dht.readTemperature();
+    if (isnan(humidity) || isnan(temperature)) {
+        Serial.println("Failed to read from DHT");
+    } else {
+        Serial.print("Humidity: ");
+        Serial.print(humidity);
+        Serial.print(" %\t");
+        Serial.print("Temperature (DHT): ");
+        Serial.print(temperature);
+        Serial.println(" °C");
+    }
+
+    temperatureSensor.requestTemperatures();
+    float temperatureDS = temperatureSensor.getTempCByIndex(0);
+    Serial.print("Temperature (DS18B20): ");
+    Serial.print(temperatureDS);
+    Serial.println(" °C");
+
+    int moistureValue = analogRead(HUMIDITY_PIN);
+    float moisturePercentage = map(moistureValue, 0, 1023, 0, 100);
+    Serial.print("Moisture Percentage: ");
+    Serial.print(moisturePercentage);
+    Serial.println("%");
+
+    int phValue = analogRead(PH_PIN);
+    float phVoltage = phValue * 5.0 / 1024.0;
+    float pH = 3.5 * phVoltage;
+    Serial.print("pH Value: ");
+    Serial.println(pH);
+
+    int turbidityValue = analogRead(TURBIDIY_PIN);
+    float turbidityVoltage = turbidityValue * 5.0 / 1024.0;
+    if (turbidityVoltage > 2.5) { // formula from docs
+        float NTU = -1120.4 * pow(turbidityVoltage, 2) + 5742.3 * turbidityVoltage - 4352.9;
+
+        if (NTU < 0) {
+            NTU = 0;
+        }
+
+        Serial.print("Turbidity (NTU): ");
+        Serial.println(NTU);
+        Serial.println(turbidityVoltage);
+    } else {
+        Serial.println("Turbidity voltage too low according to the formula");
+    }
+
+    delay(2000);
+}
+
+// Generic function to get a stable reading from an analog sensor
+double stableReading(int pin, int sampleCount, int sampleDelay) {
+    int readings[sampleCount];
+    long total = 0;
+
+    // Take multiple readings
+    for (int i = 0; i < sampleCount; i++) {
+        readings[i] = analogRead(pin);
+        delay(sampleDelay);
+    }
+
+    // Sort readings to easily find min and max values
+    for (int i = 0; i < sampleCount - 1; i++) {
+        for (int j = i + 1; j < sampleCount; j++) {
+            if (readings[i] > readings[j]) {
+                int temp = readings[i];
+                readings[i] = readings[j];
+                readings[j] = temp;
+            }
+        }
+    }
+
+    // Sum all values excluding the highest and lowest values
+    for (int i = 1; i < sampleCount - 1; i++) {
+        total += readings[i];
+    }
+
+    // Calculate average excluding min and max
+    double average = (double)total / (sampleCount - 2);
+    return average * (5.0 / 1024.0);  // Convert to voltage
+}

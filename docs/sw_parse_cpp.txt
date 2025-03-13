@@ -1,0 +1,113 @@
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <iostream>
+#include <cstring>
+#include <cctype>
+
+int main()
+{
+
+    int gh = 30;
+    int ah = 40;
+    int li = 20;
+    float ph = 3.3;
+    int qu = 2102;
+    float it = 12.32;
+    float ot = -22.32;
+    bool pu = true;
+    bool la = false;
+    bool he = true;
+    bool ve = false;
+    bool gw = true;
+
+    char buffer[61];
+    snprintf(buffer, sizeof(buffer), "*gh%03dah%03dli%03dph%04.1fqu%04dit%+06.2fot%+06.2fpu%dla%dhe%dve%dgw%d\\",
+             gh, ah, li, ph, qu, it, ot, pu, la, he, ve, gw);
+
+
+    std::cout << buffer << std::endl;
+    int pos = 1;
+    while (buffer[pos] != '\\') {
+            if (strncmp(buffer + pos, "gh", 2) == 0) {
+                pos += 2;
+                gh = (buffer[pos++] - '0') * 100 + (buffer[pos++] - '0') * 10 + (buffer[pos++] - '0');
+                std::cout << "gh: " << gh << std::endl;
+            } else if (strncmp(buffer + pos, "ah", 2) == 0) {
+                pos += 2;
+                ah = (buffer[pos++] - '0') * 100 + (buffer[pos++] - '0') * 10 + (buffer[pos++] - '0');
+                std::cout << "ah: " << ah << std::endl;
+            } else if (strncmp(buffer + pos, "li", 2) == 0) {
+                pos += 2;
+                li = (buffer[pos++] - '0') * 100 + (buffer[pos++] - '0') * 10 + (buffer[pos++] - '0');
+                std::cout << "li: " << li << std::endl;
+            } else if (strncmp(buffer + pos, "ph", 2) == 0) {
+                pos += 2;
+                int intPart = (buffer[pos++] - '0') * 10 + (buffer[pos++] - '0');
+                pos++; // Skip dot '.'
+                int decimalPart = buffer[pos++] - '0';
+                ph = intPart + decimalPart / 10.0;
+                std::cout << "ph: " << ph << std::endl;
+            } else if (strncmp(buffer + pos, "qu", 2) == 0) {
+                pos += 2;
+                qu = (buffer[pos++] - '0') * 1000 + (buffer[pos++] - '0') * 100 + (buffer[pos++] - '0') * 10 + (buffer[pos++] - '0');
+                std::cout << "qu: " << qu << std::endl;
+            } else if (strncmp(buffer + pos, "it", 2) == 0) {
+                pos += 2;
+                char itSign = buffer[pos++];
+                int itIntPart = (buffer[pos++] - '0') * 10 + (buffer[pos++] - '0');
+                pos++; // Skip dot '.'
+                int itDecimalPart = (buffer[pos++] - '0') * 10 + (buffer[pos++] - '0');
+                it = (itSign == '-' ? -1 : 1) * (itIntPart + itDecimalPart / 100.0);
+                std::cout << "it: " << it << std::endl;
+            } else if (strncmp(buffer + pos, "ot", 2) == 0) {
+                pos += 2;
+                char otSign = buffer[pos++];  // Read the sign (+ or -)
+                int otIntPart = (buffer[pos++] - '0') * 10 + (buffer[pos++] - '0');
+                pos++; // Skip dot '.'
+                int otDecimalPart = (buffer[pos++] - '0') * 10 + (buffer[pos++] - '0');
+                ot = (otSign == '-' ? -1 : 1) * (otIntPart + otDecimalPart / 100.0);
+                std::cout << "ot: " << ot << std::endl;
+            } else if (strncmp(buffer + pos, "pu", 2) == 0) {
+                pos += 2;
+                pu = buffer[pos++] - '0';
+                std::cout << "pu: " << pu << std::endl;
+            } else if (strncmp(buffer + pos, "la", 2) == 0) {
+                pos += 2;
+                la = buffer[pos++] - '0';
+                std::cout << "la: " << la << std::endl;
+            } else if (strncmp(buffer + pos, "he", 2) == 0) {
+                pos += 2;
+                he = buffer[pos++] - '0';
+                std::cout << "he: " << he << std::endl;
+            } else if (strncmp(buffer + pos, "ve", 2) == 0) {
+                pos += 2;
+                ve = buffer[pos++] - '0';
+                std::cout << "ve: " << ve << std::endl;
+            } else if (strncmp(buffer + pos, "gw", 2) == 0) {
+                pos += 2;
+                gw = buffer[pos++] - '0';
+                std::cout << "gw: " << gw << std::endl;
+            } else {
+                pos++;
+            }
+        }
+
+        auto countUntilBackslash = [](const char* buf) {
+        int count = 0;
+        while (buf[count] != '\\' && buf[count] != '\0') {
+            ++count;
+        }
+        return count;
+    };
+
+    int size = countUntilBackslash(buffer);
+    std::cout << "size until '\\': " << size << std::endl;
+
+    return 0;
+}

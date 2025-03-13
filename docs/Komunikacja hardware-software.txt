@@ -13,10 +13,22 @@ ot - temperatura na zewnątrz (outside temperature) (h)
 pu - pompa wody (pump) (s)
 ti - czas trzymania wody (h/s)
 (wysyłane 6 cyfr, po środku jest kropka)
+propozycja:
+- gh, ah, li - zakres 0-100%, 3 chary
+- ph - zakres 0.0-14.0, 4 chary (z kropką)
+- qu - zakres 0-3000, 4 chary
+- it, ot, zakres np. +10.00 - +30.00 \ -10.00 - +30.00, czyli 6 charow
+li skalowane do % po stronie hw
 
-la - oświetlenie (lamp) (s)
-he - nagrzewanie (heating) (s)
-ve - wentylacja (ventilation) (s) 
+
+la - oświetlenie (lamp) (h/s)
+he - nagrzewanie (heating) (h/s)
+ve - wentylacja (ventilation) (h/s)
+gw - bramka (gateway) (h)
+
+propozycja:
+- la, he, ve jest także wysyłane po stronie hw, który sprawdza faktyczne stany
+- dodać stan bramki
 
 (wysyłana 1 cyfra, prawda/fałsz)
 
@@ -26,6 +38,8 @@ Software:
 	*pu#la#he#ve#\
 Hardware:
 	*gh######ah######li######ph######qu######it######ot######pu#la#he#ve#\
+
+	*gh100ah100li100ph10.3qu2000it+21.32ot-10.00pu1la1he1ve1\
 
 # - cyfra 0-9
 

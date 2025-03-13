@@ -12,6 +12,7 @@ extern int timeReceived;
 
 
 void receive();
+void send();
 
 void parseMessage(const char* msg);
 

@@ -1,9 +1,8 @@
 #include "transmission.h"
 #include <Arduino.h>
+#include <sensors.h>
 
-char buffer[50];
-int bufferIndex = 0;
-bool receiving = false;
+
 
 bool pumpReceived;
 bool lampReceived;
@@ -14,26 +13,23 @@ int timeReceived;
 
 /// start reading after receiving *, read full message, stop at \ and append it back
 void receive() {
+    static char buffer[50];
+    static int bufferIndex = 0;
+    static bool receiving = false;
+
     while (Serial.available() > 0) {
         char incomingChar = Serial.read();
 
         if (incomingChar == '*') {
             receiving = true;
             bufferIndex = 0;
-            memset(buffer, 0, sizeof(buffer));
             //Serial.print("* received");
         }
 
         if (receiving) {
-            if (bufferIndex < sizeof(buffer) - 1) {
+            if (bufferIndex < sizeof(buffer) - 2) {
                 buffer[bufferIndex++] = incomingChar;
             } else if (incomingChar == '\\') {
-                //Serial.print("\\ received");
-                String dane = "";
-                for (int i = 0; i < bufferIndex; i++) {
-                    dane += buffer[i];
-                }
-                // Serial.print(dane);
                 receiving = false;
                 buffer[bufferIndex++] = '\0'; // append \ back
                 parseMessage(buffer);
@@ -45,38 +41,54 @@ void receive() {
 
 /// parse until \ is reached
 void parseMessage(const char* msg) {
-    int pos = 1;  // position tracker in the message
-    while (msg[pos] != '\\') {
-        Serial.print("c");
-        if (strncmp(msg + pos, "pu", 2) == 0) {
-            pos += 2; // move position by 2 (pu)
-            pumpReceived = msg[pos++] == '1';
-            modifyPumpState(pumpReceived);
-            // Serial.print("Pump received ");
-        } else if (strncmp(msg + pos, "la", 2) == 0) {
-            pos += 2; // move position by 2 (la)
-            lampReceived = msg[pos++] == '1';
-            modifyLampState(lampReceived);
-            // Serial.print("Lamp received ");
-        } else if (strncmp(msg + pos, "he", 2) == 0) {
-            pos += 2; // move position by 2 (he)
-            heatingReceived = msg[pos++] == '1';
-            modifyHeating(heatingReceived);
-            // Serial.print("Heating received ");
-        } else if (strncmp(msg + pos, "ve", 2) == 0) {
-            pos += 2; // move position by 2 (ve)
-            ventilationReceived = msg[pos++] == '1';
-            modifyVentilation(ventilationReceived);
-            // Serial.print("Ventilation received ");
-        } else if (strncmp(msg + pos, "ti", 2) == 0) {
-            pos += 2;
-            timeReceived = 0;
-            while (isdigit(msg[pos])) {
-                timeReceived = timeReceived * 10 + (msg[pos++] - '0');
-            }
-        } else {
+    int pos = 1;  // Start after '*'
+
+    while (msg[pos] != '\\' && msg[pos] != '\0') {
+        switch (msg[pos]) {
+            case 'p':  // pump
+                pos += 2;
+                pumpReceived = (msg[pos++] == '1');
+                modifyPumpState(pumpReceived, 60);
             break;
+
+            case 'l':  // lamp
+                pos += 2;
+                lampReceived = (msg[pos++] == '1');
+                modifyLampState(lampReceived);
+            break;
+
+            case 'h':  // heating
+                pos += 2;
+                heatingReceived = (msg[pos++] == '1');
+                modifyHeating(heatingReceived);
+            break;
+
+            case 'v':  // ventilation
+                pos += 2;
+                ventilationReceived = (msg[pos++] == '1');
+                modifyVentilation(ventilationReceived);
+            break;
+
+            case 't':  // time, the number of digits read was not hardcoded
+                pos += 2;
+                timeReceived = 0;
+                while (isdigit(msg[pos])) {
+                    timeReceived = timeReceived * 10 + (msg[pos++] - '0');
+                }
+            break;
+
+            default:
+                pos++;
         }
     }
-    // Serial.print(" end parsing");
+}
+
+/// send
+void send() {
+    char buffer[100];
+    snprintf(buffer, sizeof(buffer), "*gh%07.3fah%07.3fli%07.3fph%07.3fqu%07.3fit%07.3fot%07.3fti%07.3fpu%dla%dhe%dve%dgw%d\\",
+             sensorSoilMoisture, sensorHumidity, sensorLight, sensorPH, sensorTurbidity,
+             sensorTemperatureDHT, sensorTemperatureDS18B20, pumpRunTime, pumpRunning, lampState,
+             heatingState, ventilationState, gatewayState);
+    Serial.print(buffer);
 }

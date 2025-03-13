@@ -9,14 +9,30 @@
 #define PIN_VENTILATION 8
 
 extern bool pumpRunning;
+extern bool gatewayState;
+extern bool lampState;
+extern bool gatewayState;
+extern bool heatingState;
+extern bool ventilationState;
 extern bool gatewayCountdownStarted;
-extern unsigned long gatewayCountdownStartTime;
 
-void modifyLampState(bool state);
+// v1
+unsigned long pumpStartTime;
+unsigned long pumpDuration;
+extern unsigned long pumpRunTime;
 
-void modifyHeating(bool state);
 
-void modifyVentilation(bool state);
+// v2
+unsigned long gatewayCountdownStartTime;
+extern unsigned long gatewayClosedTime;
+
+bool pumpModeVersion1 = true; // to be able to switch?
+
+void modifyLampState(bool state); // sw-controlled
+
+void modifyHeating(bool state); // sw-controlled
+
+void modifyVentilation(bool state); // sw-controlled
 
 void openGateway();
 
@@ -27,5 +43,12 @@ void countdownGateway();
 void checkWaterReachedLevel();
 
 void modifyPumpState(bool pumpReceived);
+
+void checkStates();
+
+// version 2
+void modifyPumpState(bool pumpReceived, unsigned long pumpDuration);
+
+void updatePumpProcess();
 
 #endif // ACTUATORS_H

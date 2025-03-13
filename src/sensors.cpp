@@ -62,8 +62,14 @@ void readTurbidity() {
 
         if (sensorTurbidity < 0) {
             sensorTurbidity = 0;
+        } else if (sensorTurbidity > 999.999) {
+            sensorTurbidity = 999.999;
         }
     } else {
         sensorTurbidity = 0; // Turbidity voltage too low according to the formula?
     }
+}
+
+void readLight() {
+
 }

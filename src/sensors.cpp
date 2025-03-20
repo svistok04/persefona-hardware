@@ -13,8 +13,9 @@ float sensorHumidity;
 float sensorSoilMoisture;
 float sensorPH;
 float sensorTurbidity;
+float sensorLight;
 
-void setup() {
+void dht_setup() {
     dht.begin();
     temperatureSensor.begin();
     // temperatureSensor.getDeviceCount();

@@ -9,7 +9,6 @@
 #define PIN_VENTILATION 8
 
 extern bool pumpRunning;
-extern bool gatewayState;
 extern bool lampState;
 extern bool gatewayState;
 extern bool heatingState;
@@ -17,16 +16,16 @@ extern bool ventilationState;
 extern bool gatewayCountdownStarted;
 
 // v1
-unsigned long pumpStartTime;
-unsigned long pumpDuration;
+extern unsigned long pumpStartTime;
+extern unsigned long pumpDuration;
 extern unsigned long pumpRunTime;
 
 
 // v2
-unsigned long gatewayCountdownStartTime;
+extern unsigned long gatewayCountdownStartTime;
 extern unsigned long gatewayClosedTime;
 
-bool pumpModeVersion1 = true; // to be able to switch?
+extern bool pumpModeVersion1; // to be able to switch?
 
 void modifyLampState(bool state); // sw-controlled
 

@@ -4,7 +4,23 @@
 #include <transmission.h>
 
 bool pumpRunning;
+bool lampState;
+bool gatewayState;
+bool heatingState;
+bool ventilationState;
 bool gatewayCountdownStarted;
+
+// v1
+unsigned long pumpStartTime;
+unsigned long pumpDuration;
+unsigned long pumpRunTime;
+
+
+// v2
+unsigned long gatewayCountdownStartTime;
+unsigned long gatewayClosedTime;
+bool pumpModeVersion1 = true;
+
 float temperatureRange = 2.0; // acceptable temperature disparity
 
 void modifyLampState(bool state) {

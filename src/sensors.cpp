@@ -7,15 +7,15 @@ DHT dht(DHT_PIN, DHTTYPE);
 OneWire oneWire(TEMPERATURE_PIN);
 DallasTemperature temperatureSensor(&oneWire);
 
-float sensorTemperatureDHT;
-float sensorTemperatureDS18B20;
-float sensorHumidity;
-float sensorSoilMoisture;
-float sensorPH;
-float sensorTurbidity;
-float sensorLight;
+double sensorTemperatureDHT = 10.0;
+double sensorTemperatureDS18B20 = 20.0;
+double sensorHumidity = 30.0;
+double sensorSoilMoisture = 40.0;
+double sensorPH = 5.5;
+double sensorTurbidity = 25.5;
+double sensorLight = 99.99;
 
-void dht_setup() {
+void dhtSetup() {
     dht.begin();
     temperatureSensor.begin();
     // temperatureSensor.getDeviceCount();
@@ -48,6 +48,18 @@ void readSoilMoisture() {
     const int moistureValue = analogRead(SOIL_MOISTURE_PIN);
     sensorSoilMoisture = map(moistureValue, 0, 1023, 0, 100);
 }
+
+void readSensors() {
+    readDHTTemperature();
+    readDHTHumidity();
+    readDS18B20Temperature();
+    readSoilMoisture();
+    readPH();
+    readTurbidity();
+    // readLight();
+    // readGateway();
+}
+
 
 void readPH() {
     const float phValue = analogRead(PH_PIN);

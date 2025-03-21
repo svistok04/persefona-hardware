@@ -1,9 +1,9 @@
-#pragma once
-
 #include <Arduino.h>
 #include <transmission.h>
 #include <actuators.h>
+#include <sensors.h>
 
+bool test = true;
 
 void setup() {
 
@@ -13,8 +13,9 @@ void setup() {
     pinMode(PIN_LAMP, OUTPUT);
     pinMode(PIN_HEATING, OUTPUT);
     pinMode(PIN_VENTILATION, OUTPUT);
-    digitalWrite(PIN_PUMP, LOW);
+    // digitalWrite(PIN_PUMP, LOW);
     Serial.begin(9600);
+    dhtSetup();
 }
 
 void loop() {
@@ -22,10 +23,24 @@ void loop() {
     static unsigned long lastSendTime = 0;
     if (millis() - lastSendTime > 1000) {
         lastSendTime = millis();
-        receive();
+        readSensors();
         send();
         updatePumpProcess();
     }
+
+    receive();
+    // if (Serial.available() > 0) {
+    //     char c = Serial.read();
+    //     Serial.print(c);
+    //     Serial.println("\n");
+    //     test = !test;
+    //     digitalWrite(5, test);
+    // }
+    // if (Serial.available() > 0) {
+    //     char serialRead = Serial.read();
+    //     test = !test;
+    //     digitalWrite(PIN_LAMP, test);
+    // }
 
     // if (pumpRunning) {
     //     checkWaterReachedLevel();

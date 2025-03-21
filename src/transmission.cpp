@@ -8,6 +8,7 @@ bool pumpReceived;
 bool lampReceived;
 bool heatingReceived;
 bool ventilationReceived;
+float desiredTemperature;
 int timeReceived;
 
 
@@ -23,16 +24,20 @@ void receive() {
         if (incomingChar == '*') {
             receiving = true;
             bufferIndex = 0;
-            //Serial.print("* received");
+            // Serial.println("* received");
         }
 
         if (receiving) {
-            if (bufferIndex < sizeof(buffer) - 2) {
-                buffer[bufferIndex++] = incomingChar;
-            } else if (incomingChar == '\\') {
+            if (incomingChar == '\\') {
                 receiving = false;
-                buffer[bufferIndex++] = '\0'; // append \ back
+                buffer[bufferIndex++] = incomingChar;
+                buffer[bufferIndex++] = '\0';
+                Serial.println("Why can't i read \\");
+                Serial.print("I received: ");
+                Serial.println(buffer);
                 parseMessage(buffer);
+            } else if (bufferIndex < sizeof(buffer) - 2) {
+                buffer[bufferIndex++] = incomingChar;
             }
         }
     }
@@ -48,24 +53,29 @@ void parseMessage(const char* msg) {
             case 'p':  // pump
                 pos += 2;
                 pumpReceived = (msg[pos++] == '1');
-                modifyPumpState(pumpReceived, 60);
+                Serial.println("Pump");
+                modifyPumpState(pumpReceived, 5);
             break;
 
             case 'l':  // lamp
+                Serial.println("Lamp");
                 pos += 2;
-                lampReceived = (msg[pos++] == '1');
+                lampReceived = msg[pos++] == '1';
+                // lampReceived ? Serial.println("True") : Serial.println("False");
                 modifyLampState(lampReceived);
+                // digitalWrite(5, lampReceived);
             break;
 
             case 'h':  // heating
                 pos += 2;
-                heatingReceived = (msg[pos++] == '1');
+                heatingReceived = msg[pos++] == '1';
                 modifyHeating(heatingReceived);
             break;
 
             case 'v':  // ventilation
                 pos += 2;
-                ventilationReceived = (msg[pos++] == '1');
+                Serial.println("Ventilation");
+                ventilationReceived = msg[pos++] == '1';
                 modifyVentilation(ventilationReceived);
             break;
 
@@ -76,9 +86,7 @@ void parseMessage(const char* msg) {
                     timeReceived = timeReceived * 10 + (msg[pos++] - '0');
                 }
             break;
-
-            default:
-                pos++;
+            default: pos++;
         }
     }
 }
@@ -86,9 +94,18 @@ void parseMessage(const char* msg) {
 /// send
 void send() {
     char buffer[100];
-    snprintf(buffer, sizeof(buffer), "*gh%07.3fah%07.3fli%07.3fph%07.3fqu%07.3fit%07.3fot%07.3fti%07.3fpu%dla%dhe%dve%dgw%d\\",
-             sensorSoilMoisture, sensorHumidity, sensorLight, sensorPH, sensorTurbidity,
-             sensorTemperatureDHT, sensorTemperatureDS18B20, pumpRunTime, pumpRunning, lampState,
+
+    snprintf(buffer, sizeof(buffer),
+             "*gh%06dah%06dli%06dph%06dqu%06dit%06dot%06dti%dpu%dla%dhe%dve%dgw%d\\\n",
+             (int)(sensorSoilMoisture * 1000),
+             (int)(sensorHumidity * 1000),
+             (int)(sensorLight * 1000),
+             (int)(sensorPH * 1000),
+             (int)(sensorTurbidity * 1000),
+             (int)(sensorTemperatureDHT * 1000),
+             (int)(sensorTemperatureDS18B20 * 1000),
+             pumpRunTime, pumpRunning, lampState,
              heatingState, ventilationState, gatewayState);
+
     Serial.print(buffer);
 }

@@ -1,25 +1,25 @@
 #ifndef SENSORS_H
 #define SENSORS_H
 
-#define DHT_PIN 7
+#define DHT_PIN 9
 #define DHTTYPE DHT11
-#define TEMPERATURE_PIN 6 // DS18B20
+#define TEMPERATURE_PIN 10 // DS18B20
 #define SOIL_MOISTURE_PIN A3 // FC-28
 #define PH_PIN A2 // SEN0161
 #define TURBIDIY_PIN A1 // SEN0189
 // light sensor missing #define LIGHT_PIN
 // gateway detection sensor missing #define PIN_GATEWAY_SENSOR
 
-extern float sensorTemperatureDHT;
-extern float sensorTemperatureDS18B20;
-extern float sensorHumidity;
-extern float sensorSoilMoisture;
-extern float sensorPH;
-extern float sensorTurbidity;
-extern float sensorLight;
+extern double sensorTemperatureDHT;
+extern double sensorTemperatureDS18B20;
+extern double sensorHumidity;
+extern double sensorSoilMoisture;
+extern double sensorPH;
+extern double sensorTurbidity;
+extern double sensorLight;
 
-
-void setupSensors();
+void dhtSetup();
+void readSensors();
 void readDHTTemperature();
 void readDHTHumidity();
 void readDS18B20Temperature();

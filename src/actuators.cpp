@@ -27,7 +27,7 @@ void modifyLampState(bool state) {
     digitalWrite(PIN_LAMP, state);
 }
 
-void modifyHeating() {
+void modifyHeating(bool state) {
     static unsigned int lastHeatingCheck = 0;
     if (millis() - lastHeatingCheck > 60000) { // check every 1m
         lastHeatingCheck = millis();

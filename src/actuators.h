@@ -13,19 +13,28 @@ extern bool lampState;
 extern bool gatewayState;
 extern bool heatingState;
 extern bool ventilationState;
-extern bool gatewayCountdownStarted;
 
+extern bool pumpModeVersion1;
 // v1
+extern bool gatewayCountdownStarted;
+extern bool gatewayIsClosing;
+extern unsigned long gatewayCountdownStartTime;
+extern unsigned long gatewayClosedTime;
+void openGateway();
+void closeGateway();
+bool checkGatewayClosed();
+void countdownGateway();
+void stopGatewayClosing();
+void stopGatewayOpening();
+void checkWaterReachedLevel();
+
+// v2
 extern unsigned long pumpStartTime;
 extern unsigned long pumpDuration;
 extern unsigned long pumpRunTime;
+void modifyPumpStateV2(bool pumpReceived, unsigned long pumpDuration);
+void updatePumpProcessV2();
 
-
-// v2
-extern unsigned long gatewayCountdownStartTime;
-extern unsigned long gatewayClosedTime;
-
-extern bool pumpModeVersion1; // to be able to switch?
 
 void modifyLampState(bool state); // sw-controlled
 
@@ -33,21 +42,11 @@ void modifyHeating(bool state); // sw-controlled
 
 void modifyVentilation(bool state); // sw-controlled
 
-void openGateway();
-
-void closeGateway();
-
-void countdownGateway();
-
-void checkWaterReachedLevel();
 
 void modifyPumpState(bool pumpReceived);
 
 void checkStates();
 
-// version 2
-void modifyPumpState(bool pumpReceived, unsigned long pumpDuration);
 
-void updatePumpProcess();
 
 #endif // ACTUATORS_H

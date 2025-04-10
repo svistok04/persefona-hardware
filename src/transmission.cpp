@@ -2,8 +2,6 @@
 #include <Arduino.h>
 #include <sensors.h>
 
-
-
 bool pumpReceived;
 bool lampReceived;
 bool heatingReceived;
@@ -52,9 +50,14 @@ void parseMessage(const char* msg) {
         switch (msg[pos]) {
             case 'p':  // pump
                 pos += 2;
-                pumpReceived = (msg[pos++] == '1');
+                pumpReceived = msg[pos++] == '1';
                 Serial.println("Pump");
-                modifyPumpState(pumpReceived, 5);
+                if (pumpModeVersion1) {
+                    modifyPumpState(pumpReceived);
+                } else {
+                    modifyPumpStateV2(pumpReceived, 5);
+                }
+
             break;
 
             case 'l':  // lamp

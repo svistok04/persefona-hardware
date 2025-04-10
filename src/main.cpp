@@ -25,7 +25,16 @@ void loop() {
         lastSendTime = millis();
         readSensors();
         send();
-        updatePumpProcess();
+        if (pumpModeVersion1) {
+            countdownGateway();
+            if (gatewayIsClosing) {
+                stopGatewayClosing();
+            }
+
+        } else {
+            updatePumpProcessV2();
+        }
+
     }
 
     receive();

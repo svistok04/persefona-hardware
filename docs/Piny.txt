@@ -1,6 +1,12 @@
-Pompa - 3
-Poziom wody - 4
-Brama - 5
-Lampa - 6
-Ogrzewanie - 7
-Wentylacja - 8
+persefona:
+pompa - d4
+oswietlenie - d5
+bramka - d12
+poziom wody - d11
+ogrzewanie - d8
+wentylacja - d7
+dht - d9 
+ds1820 - d10 
+ph sen0161 - a2
+soil moisture fc28 - a3
+turbidity sen0189 - a1
